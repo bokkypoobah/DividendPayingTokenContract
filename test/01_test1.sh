@@ -42,7 +42,9 @@ echo "$DIFFS1" | tee -a $TEST1OUTPUT
 solc_0.5.4 --version | tee -a $TEST1OUTPUT
 
 echo "var tokenOutput=`solc_0.5.4 --allow-paths . --optimize --pretty-json --combined-json abi,bin,interface $TOKENSOL`;" > $TOKENJS
+echo "var dividendPayingTokenOutput=`solc_0.5.4 --allow-paths . --optimize --pretty-json --combined-json abi,bin,interface $DIVIDENDPAYINGTOKENSOL`;" > $DIVIDENDPAYINGTOKENJS
 ../scripts/solidityFlattener.pl --contractsdir=../contracts --mainsol=$TOKENSOL --outputsol=$TOKENFLATTENED --verbose | tee -a $TEST1OUTPUT
+../scripts/solidityFlattener.pl --contractsdir=../contracts --mainsol=$DIVIDENDPAYINGTOKENSOL --outputsol=$DIVIDENDPAYINGTOKENFLATTENED --verbose | tee -a $TEST1OUTPUT
 
 
 if [ "$MODE" = "compile" ]; then
@@ -52,14 +54,19 @@ fi
 
 geth --verbosity 3 attach $GETHATTACHPOINT << EOF | tee -a $TEST1OUTPUT
 loadScript("$TOKENJS");
+loadScript("$DIVIDENDPAYINGTOKENJS");
 loadScript("lookups.js");
 loadScript("functions.js");
 
-var tokenAbi = JSON.parse(tokenOutput.contracts["$TOKENSOL:DividendPayingToken"].abi);
-var tokenBin = "0x" + tokenOutput.contracts["$TOKENSOL:DividendPayingToken"].bin;
+var tokenAbi = JSON.parse(tokenOutput.contracts["$TOKENSOL:$TOKENNAME"].abi);
+var tokenBin = "0x" + tokenOutput.contracts["$TOKENSOL:$TOKENNAME"].bin;
+var dividendPayingTokenAbi = JSON.parse(dividendPayingTokenOutput.contracts["$DIVIDENDPAYINGTOKENSOL:$DIVIDENDPAYINGTOKENNAME"].abi);
+var dividendPayingTokenBin = "0x" + dividendPayingTokenOutput.contracts["$DIVIDENDPAYINGTOKENSOL:$DIVIDENDPAYINGTOKENNAME"].bin;
 
 // console.log("DATA: tokenAbi=" + JSON.stringify(tokenAbi));
 // console.log("DATA: tokenBin=" + JSON.stringify(tokenBin));
+// console.log("DATA: dividendPayingTokenAbi=" + JSON.stringify(dividendPayingTokenAbi));
+// console.log("DATA: dividendPayingTokenBin=" + JSON.stringify(dividendPayingTokenBin));
 
 
 unlockAccounts("$PASSWORD");
@@ -68,6 +75,75 @@ console.log("RESULT: ");
 
 
 var i;
+
+// -----------------------------------------------------------------------------
+var deployGroup1Message = "Deploy Group #2";
+var numberOfTokens = $NUMBEROFTOKENS;
+var _tokenClasses = "$TOKENCLASSES".split(":");
+var _tokenSymbols = "$TOKENSYMBOLS".split(":");
+var _tokenNames = "$TOKENNAMES".split(":");
+var _tokenDecimals = "$TOKENDECIMALS".split(":");
+var _tokenInitialSupplies = "$TOKENINITIALSUPPLIES".split(":");
+var _tokenInitialDistributions = "$TOKENINITIALDISTRIBUTIONS".split(":");
+console.log("RESULT: _tokenClasses = " + JSON.stringify(_tokenClasses));
+console.log("RESULT: _tokenSymbols = " + JSON.stringify(_tokenSymbols));
+console.log("RESULT: _tokenNames = " + JSON.stringify(_tokenNames));
+console.log("RESULT: _tokenDecimals = " + JSON.stringify(_tokenDecimals));
+console.log("RESULT: _tokenInitialSupplies = " + JSON.stringify(_tokenInitialSupplies));
+console.log("RESULT: _tokenInitialDistributions = " + JSON.stringify(_tokenInitialDistributions));
+// -----------------------------------------------------------------------------
+console.log("RESULT: ---------- " + deployGroup1Message + " ----------");
+var tokenTxs = [];
+var tokenAddresses = [];
+var tokens = [];
+var tokenTxsToIndexMapping = {};
+for (i = 0; i < numberOfTokens; i++) {
+  var tokenClass = _tokenClasses[i];
+  console.log("RESULT: OUTER " + i + " tokenClass = '" + tokenClass +"'");
+  var abi = (tokenClass === "$DIVIDENDPAYINGTOKENNAME") ? dividendPayingTokenAbi : tokenAbi;
+  var bin = (tokenClass === "$DIVIDENDPAYINGTOKENNAME") ? dividendPayingTokenBin : tokenBin;
+  console.log("RESULT: OUTER " + i + " abi=" + JSON.stringify(abi));
+  var tokenContract = web3.eth.contract(abi);
+  tokens[i] = tokenContract.new(_tokenSymbols[i], _tokenNames[i], _tokenDecimals[i], deployer, new BigNumber(_tokenInitialSupplies[i]).shift(_tokenDecimals[i]), {from: deployer, data: bin, gas: 2000000, gasPrice: defaultGasPrice},
+    function(e, contract) {
+      if (!e) {
+        if (!contract.address) {
+          // var i = tokenTxsToIndexMapping[contract.transactionHash];
+          // tokenTxs[i] = contract.transactionHash;
+        } else {
+          var i = tokenTxsToIndexMapping[contract.transactionHash];
+          tokenTxs[i] = contract.transactionHash;
+          tokenAddresses[i] = contract.address;
+          addAccount(tokenAddresses[i], "Token '" + tokens[i].symbol() + "' '" + tokens[i].name() + "'");
+          addAddressSymbol(tokenAddresses[i], tokens[i].symbol());
+          addTokenContractAddressAndAbi(i, tokenAddresses[i], contract.abi);
+          console.log("DATA: var token" + i + "Address=\"" + tokenAddresses[i] + "\";");
+          console.log("DATA: var token" + i + "Abi=" + JSON.stringify(contract.abi) + ";");
+          console.log("DATA: var token" + i + "=eth.contract(token" + i + "Abi).at(token" + i + "Address);");
+        }
+      }
+    }
+  );
+  tokenTxsToIndexMapping[tokens[i].transactionHash] = i;
+}
+while (txpool.status.pending > 0) {
+}
+printBalances();
+for (i = 0; i < numberOfTokens; i++) {
+  failIfTxStatusError(tokenTxs[i], deployGroup1Message + " - Token ''" + tokens[i].symbol() + "' '" + tokens[i].name() + "'");
+}
+for (i = 0; i < numberOfTokens; i++) {
+  printTxData("tokenTx[" + i + "]", tokenTxs[i]);
+}
+console.log("RESULT: ");
+for (i = 0; i < numberOfTokens; i++) {
+  printTokenContractDetails(i);
+  console.log("RESULT: ");
+}
+console.log("RESULT: ");
+
+
+exit;
 
 // -----------------------------------------------------------------------------
 var deployGroup1Message = "Deploy Group #1";
@@ -83,7 +159,7 @@ var token = tokenContract.new("$SYMBOL", "$NAME", "$DECIMALS", deployer, "$INITI
         tokenTx = contract.transactionHash;
       } else {
         tokenAddress = contract.address;
-        addAccount(tokenAddress, "Token");
+        addAccount(tokenAddress, "Token '" + token.symbol() + "' '" + token.name() + "'");
         console.log("DATA: var tokenAddress=\"" + tokenAddress + "\";");
         console.log("DATA: var tokenAbi=" + JSON.stringify(tokenAbi) + ";");
         console.log("DATA: var token=eth.contract(tokenAbi).at(tokenAddress);");
@@ -94,17 +170,18 @@ var token = tokenContract.new("$SYMBOL", "$NAME", "$DECIMALS", deployer, "$INITI
 while (txpool.status.pending > 0) {
 }
 printBalances();
-failIfTxStatusError(tokenTx, deployGroup1Message + " - Token");
+failIfTxStatusError(tokenTx, deployGroup1Message + " - Token '" + token.symbol() + "' '" + token.name() + "'");
 printTxData("tokenTx", tokenTx);
 console.log("RESULT: ");
 
 exit;
 
-SYMBOL=TKN
-NAME="Token"
-DECIMALS=18
-INITIALSUPPLY=1000000
-INITIALDISTRIBUTION=1000
+NUMBEROFTOKENS=2
+TOKENSYMBOLS="TKN:DPT"
+TOKENNAMES="Token:Dividend Paying Token"
+TOKENDECIMALS="18:18"
+TOKENINITIALSUPPLIES="10000000:10000"
+TOKENINITIALDISTRIBUTIONS="100000:100"
 
 
 
@@ -115,7 +192,7 @@ var _tokenSymbols = "$TOKENSYMBOLS".split(":");
 var _tokenNames = "$TOKENNAMES".split(":");
 var _tokenDecimals = "$TOKENDECIMALS".split(":");
 var _tokenInitialSupplies = "$TOKENINITIALSUPPLIES".split(":");
-var _tokenInitialDistributions = "$TOKENINITIALDISTRIBUTION".split(":");
+var _tokenInitialDistributions = "$TOKENINITIALDISTRIBUTIONS".split(":");
 // console.log("RESULT: _tokenSymbols = " + JSON.stringify(_tokenSymbols));
 // console.log("RESULT: _tokenNames = " + JSON.stringify(_tokenNames));
 // console.log("RESULT: _tokenDecimals = " + JSON.stringify(_tokenDecimals));

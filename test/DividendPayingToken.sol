@@ -45,6 +45,9 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         _totalSupply = initialSupply;
         emit Transfer(address(0), tokenOwner, _totalSupply);
     }
+    function justAnotherFunctionToBeDeleted() public view returns (string memory) {
+        return _symbol;
+    }
     function symbol() public view returns (string memory) {
         return _symbol;
     }

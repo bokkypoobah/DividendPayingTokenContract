@@ -3,15 +3,24 @@ PASSWORD=
 
 SOURCEDIR=../contracts/
 
-TOKENSOL=DividendPayingToken.sol
-TOKENJS=DividendPayingToken.js
-TOKENFLATTENED=../flattened/DividendPayingToken_flattened.sol
+TOKENNAME=MintableToken
+TOKENSOL=MintableToken.sol
+TOKENJS=MintableToken.js
+TOKENFLATTENED=../flattened/MintableToken_flattened.sol
 
-SYMBOL=TKN
-NAME="Token"
-DECIMALS=18
-INITIALSUPPLY=1000000
-INITIALDISTRIBUTION=1000
+DIVIDENDPAYINGTOKENNAME=DividendPayingToken
+DIVIDENDPAYINGTOKENSOL=DividendPayingToken.sol
+DIVIDENDPAYINGTOKENJS=DividendPayingToken.js
+DIVIDENDPAYINGTOKENFLATTENED=../flattened/DividendPayingToken_flattened.sol
+
+NUMBEROFTOKENS=2
+TOKENCLASSES="MintableToken:DividendPayingToken"
+TOKENSYMBOLS="TKN:DPT"
+TOKENNAMES="Token:Dividend Paying Token"
+TOKENDECIMALS="18:18"
+TOKENINITIALSUPPLIES="10000000:10000"
+TOKENINITIALDISTRIBUTIONS="100000:100"
+
 
 DEPLOYMENTDATA=deploymentData.js
 

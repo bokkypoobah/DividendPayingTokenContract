@@ -1,12 +1,15 @@
 pragma solidity ^0.5.0;
 
 // ----------------------------------------------------------------------------
-// Dividend Paying Token
+// Mintable Token
 //
 // NOTE: This token contract allows the owner to mint and burn tokens for any
 // account, and is used for testing
 //
-// Enjoy. (c) BokkyPooBah / Bok Consulting Pty Ltd 2019.
+// https://github.com/bokkypoobah/BokkyPooBahsDerivatives
+//
+//
+// Enjoy. (c) BokkyPooBah / Bok Consulting Pty Ltd 2018.
 //
 // GNU Lesser General Public License 3.0
 // https://www.gnu.org/licenses/lgpl-3.0.en.html
@@ -129,13 +132,12 @@ contract MintableTokenInterface is ERC20Interface {
 
 
 // ----------------------------------------------------------------------------
-// DividendPayingToken = ERC20 + symbol + name + decimals + mint + burn
-//                     + dividend payment
+// MintableToken = ERC20 + symbol + name + decimals + mint + burn
 //
 // NOTE: This token contract allows the owner to mint and burn tokens for any
 // account, and is used for testing
 // ----------------------------------------------------------------------------
-contract DividendPayingToken is MintableTokenInterface, Owned {
+contract MintableToken is MintableTokenInterface, Owned {
     using SafeMath for uint;
 
     string _symbol;
@@ -154,9 +156,6 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         balances[tokenOwner] = initialSupply;
         _totalSupply = initialSupply;
         emit Transfer(address(0), tokenOwner, _totalSupply);
-    }
-    function justAnotherFunctionToBeDeleted() public view returns (string memory) {
-        return _symbol;
     }
     function symbol() public view returns (string memory) {
         return _symbol;
@@ -215,7 +214,10 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         emit Transfer(tokenOwner, address(0), tokens);
         return true;
     }
+    function () external payable {
+        revert();
+    }
+    function transferAnyERC20Token(address tokenAddress, uint tokens) public onlyOwner returns (bool success) {
+        return ERC20Interface(tokenAddress).transfer(owner, tokens);
+    }
 }
-// ----------------------------------------------------------------------------
-// End - Dividend Paying Token
-// ----------------------------------------------------------------------------
