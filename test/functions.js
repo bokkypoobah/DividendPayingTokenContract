@@ -86,28 +86,35 @@ function addTokenContractAddressAndAbi(i, address, abi) {
 //-----------------------------------------------------------------------------
 function printBalances() {
   var i = 0;
+  var numberOfTokens = 2;
   var j;
   var totalTokenBalances = [new BigNumber(0), new BigNumber(0), new BigNumber(0), new BigNumber(0)];
   console.log("RESULT:  # Account                                             EtherBalanceChange               " + padLeft(_symbols[0], 16) + "               " + padLeft(_symbols[1], 16) + " Name");
-  console.log("RESULT:                                                                                         " + padLeft(_symbols[2], 16) + "               " + padLeft(_symbols[3], 16));
+  if (numberOfTokens > 2) {
+    console.log("RESULT:                                                                                         " + padLeft(_symbols[2], 16) + "               " + padLeft(_symbols[3], 16));
+  }
   console.log("RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------");
   accounts.forEach(function(e) {
     var etherBalanceBaseBlock = eth.getBalance(e, baseBlock);
     var etherBalance = web3.fromWei(eth.getBalance(e).minus(etherBalanceBaseBlock), "ether");
     var tokenBalances = [];
-    for (j = 0; j < 4; j++) {
+    for (j = 0; j < numberOfTokens; j++) {
       tokenBalances[j] = _tokens[j] == null ? new BigNumber(0) : _tokens[j].balanceOf(e).shift(-_decimals[j]);
       totalTokenBalances[j] = totalTokenBalances[j].add(tokenBalances[j]);
     }
     console.log("RESULT: " + pad2(i) + " " + e  + " " + pad(etherBalance) + " " +
       padToken(tokenBalances[0], _decimals[0]) + " " + padToken(tokenBalances[1], _decimals[1]) + " " + accountNames[e]);
+    if (numberOfTokens > 2) {
       console.log("RESULT:                                                                           " +
         padToken(tokenBalances[2], _decimals[2]) + " " + padToken(tokenBalances[3], _decimals[3]));
+    }
     i++;
   });
   console.log("RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------");
   console.log("RESULT:                                                                           " + padToken(totalTokenBalances[0], _decimals[0]) + " " + padToken(totalTokenBalances[1], _decimals[1]) + " Total Token Balances");
-  console.log("RESULT:                                                                           " + padToken(totalTokenBalances[2], _decimals[2]) + " " + padToken(totalTokenBalances[3], _decimals[3]));
+  if (numberOfTokens > 2) {
+    console.log("RESULT:                                                                           " + padToken(totalTokenBalances[2], _decimals[2]) + " " + padToken(totalTokenBalances[3], _decimals[3]));
+  }
   console.log("RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------");
   console.log("RESULT: ");
 }

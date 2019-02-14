@@ -1,29 +1,17 @@
  # Account                                             EtherBalanceChange                              0                              1 Name
-                                                                                                       2                              3
 -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e        0.000000000000000000           0.000000000000000000           0.000000000000000000 Miner
-                                                                                    0.000000000000000000           0.000000000000000000
  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433        0.000000000000000000           0.000000000000000000           0.000000000000000000 Deployer
-                                                                                    0.000000000000000000           0.000000000000000000
  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000           0.000000000000000000 User1
-                                                                                    0.000000000000000000           0.000000000000000000
  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000           0.000000000000000000 User2
-                                                                                    0.000000000000000000           0.000000000000000000
  4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000           0.000000000000000000           0.000000000000000000 User3
-                                                                                    0.000000000000000000           0.000000000000000000
  5 0xa55a151eb00fded1634d27d1127b4be4627079ea        0.000000000000000000           0.000000000000000000           0.000000000000000000 User4
-                                                                                    0.000000000000000000           0.000000000000000000
  6 0xa66a85ede0cbe03694aa9d9de0bb19c99ff55bd9        0.000000000000000000           0.000000000000000000           0.000000000000000000 User5
-                                                                                    0.000000000000000000           0.000000000000000000
  7 0xa77a2b9d4b1c010a22a7c565dc418cef683dbcec        0.000000000000000000           0.000000000000000000           0.000000000000000000 User6
-                                                                                    0.000000000000000000           0.000000000000000000
  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.000000000000000000           0.000000000000000000           0.000000000000000000 Fee
-                                                                                    0.000000000000000000           0.000000000000000000
  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000           0.000000000000000000 UIFee
-                                                                                    0.000000000000000000           0.000000000000000000
 -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
                                                                                     0.000000000000000000           0.000000000000000000 Total Token Balances
-                                                                                    0.000000000000000000           0.000000000000000000
 -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
 
 
@@ -33,58 +21,113 @@ _tokenNames = ["Token","Dividend Paying Token"]
 _tokenDecimals = ["18","18"]
 _tokenInitialSupplies = ["10000000","10000"]
 _tokenInitialDistributions = ["100000","100"]
----------- Deploy Group #2 ----------
+---------- Deploy Group #1 ----------
 OUTER 0 tokenClass = 'MintableToken'
 OUTER 0 abi=[{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"tokens","type":"uint256"}],"name":"mint","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnershipImmediately","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"tokens","type":"uint256"}],"name":"burn","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenAddress","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferAnyERC20Token","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"tokenOwner","type":"address"},{"name":"initialSupply","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}]
 OUTER 1 tokenClass = 'DividendPayingToken'
 OUTER 1 abi=[{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"tokens","type":"uint256"}],"name":"mint","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"justAnotherFunctionToBeDeleted","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnershipImmediately","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"tokens","type":"uint256"}],"name":"burn","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"tokenOwner","type":"address"},{"name":"initialSupply","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}]
  # Account                                             EtherBalanceChange                            TKN                            DPT Name
-                                                                                                       2                              3
 -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e        0.011472500000000000           0.000000000000000000           0.000000000000000000 Miner
-                                                                                    0.000000000000000000           0.000000000000000000
  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.011472500000000000    10000000.000000000000000000       10000.000000000000000000 Deployer
-                                                                                    0.000000000000000000           0.000000000000000000
  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000           0.000000000000000000 User1
-                                                                                    0.000000000000000000           0.000000000000000000
  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000           0.000000000000000000 User2
-                                                                                    0.000000000000000000           0.000000000000000000
  4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000           0.000000000000000000           0.000000000000000000 User3
-                                                                                    0.000000000000000000           0.000000000000000000
  5 0xa55a151eb00fded1634d27d1127b4be4627079ea        0.000000000000000000           0.000000000000000000           0.000000000000000000 User4
-                                                                                    0.000000000000000000           0.000000000000000000
  6 0xa66a85ede0cbe03694aa9d9de0bb19c99ff55bd9        0.000000000000000000           0.000000000000000000           0.000000000000000000 User5
-                                                                                    0.000000000000000000           0.000000000000000000
  7 0xa77a2b9d4b1c010a22a7c565dc418cef683dbcec        0.000000000000000000           0.000000000000000000           0.000000000000000000 User6
-                                                                                    0.000000000000000000           0.000000000000000000
  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.000000000000000000           0.000000000000000000           0.000000000000000000 Fee
-                                                                                    0.000000000000000000           0.000000000000000000
  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000           0.000000000000000000 UIFee
-                                                                                    0.000000000000000000           0.000000000000000000
-10 0x12322cf0575d3ce515765d134d7dd9d2725530ae        0.000000000000000000           0.000000000000000000           0.000000000000000000 Token 'TKN' 'Token'
-                                                                                    0.000000000000000000           0.000000000000000000
-11 0x350234335cedaaa09260790c8167f85004828a32        0.000000000000000000           0.000000000000000000           0.000000000000000000 Token 'DPT' 'Dividend Paying Token'
-                                                                                    0.000000000000000000           0.000000000000000000
+10 0x611d3a5ac803dfb0acc68264d83538fef62fc5f8        0.000000000000000000           0.000000000000000000           0.000000000000000000 Token 'TKN' 'Token'
+11 0x24ad1371437980d21a8ebf2e46a824b860a6d47c        0.000000000000000000           0.000000000000000000           0.000000000000000000 Token 'DPT' 'Dividend Paying Token'
 -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
                                                                              10000000.000000000000000000       10000.000000000000000000 Total Token Balances
-                                                                                    0.000000000000000000           0.000000000000000000
 -- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
 
-PASS Deploy Group #2 - Token ''TKN' 'Token'
-PASS Deploy Group #2 - Token ''DPT' 'Dividend Paying Token'
-tokenTx[0] status=0x1 Success gas=2000000 gasUsed=1205623 costETH=0.006028115 costUSD=0.81928110965 @ ETH/USD=135.91 gasPrice=5 gwei block=6713 txIx=0 txId=0x089f6cb8a3916801516f53875c08dbfa5f08e4ca17443f2ba92a2063e5ac9a18 @ 1550131992 Thu, 14 Feb 2019 08:13:12 UTC
-tokenTx[1] status=0x1 Success gas=2000000 gasUsed=1088877 costETH=0.005444385 costUSD=0.73994636535 @ ETH/USD=135.91 gasPrice=5 gwei block=6713 txIx=1 txId=0x9bf861f1bcb699163a4ee4b39928fa4ba90bff749b2ae6ea1c9f06ef2f8ab565 @ 1550131992 Thu, 14 Feb 2019 08:13:12 UTC
+PASS Deploy Group #1 - Token ''TKN' 'Token'
+PASS Deploy Group #1 - Token ''DPT' 'Dividend Paying Token'
+tokenTx[0] status=0x1 Success gas=2000000 gasUsed=1205623 costETH=0.006028115 costUSD=0.81928110965 @ ETH/USD=135.91 gasPrice=5 gwei block=8221 txIx=0 txId=0x18d0ee308126e75931030bb36cc0181810f7f1b25d83bc80935cd31f15c235e8 @ 1550140936 Thu, 14 Feb 2019 10:42:16 UTC
+tokenTx[1] status=0x1 Success gas=2000000 gasUsed=1088877 costETH=0.005444385 costUSD=0.73994636535 @ ETH/USD=135.91 gasPrice=5 gwei block=8221 txIx=1 txId=0x31a58389410cc9bb59ef740cce381772a8ae6fb091666e3947e4703ec065fd32 @ 1550140936 Thu, 14 Feb 2019 10:42:16 UTC
 
-token0ContractAddress=Token 'TKN' 'Token':0x1232
+token0ContractAddress=Token 'TKN' 'Token':0x611d
 token0.owner/new=Deployer:0xa11a/Null:0x0000
 token0.details='TKN' 'Token' 18 dp
 token0.totalSupply=10000000
-token0.Transfer 0 #6713 from=Null:0x0000 to=Deployer:0xa11a tokens=10000000
+token0.Transfer 0 #8221 from=Null:0x0000 to=Deployer:0xa11a tokens=10000000
 
-token1ContractAddress=Token 'DPT' 'Dividend Paying Token':0x3502
+token1ContractAddress=Token 'DPT' 'Dividend Paying Token':0x24ad
 token1.owner/new=Deployer:0xa11a/Null:0x0000
 token1.details='DPT' 'Dividend Paying Token' 18 dp
 token1.totalSupply=10000
-token1.Transfer 0 #6713 from=Null:0x0000 to=Deployer:0xa11a tokens=10000
+token1.Transfer 0 #8221 from=Null:0x0000 to=Deployer:0xa11a tokens=10000
+
+
+---------- Deploy Group #2 ----------
+ # Account                                             EtherBalanceChange                            TKN                            DPT Name
+-- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
+ 0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e        0.014578640000000000           0.000000000000000000           0.000000000000000000 Miner
+ 1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.014578640000000000    10000000.000000000000000000       10000.000000000000000000 Deployer
+ 2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000      100000.100000000000000000         100.100000000000000000 User1
+ 3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000      100000.200000000000000000         100.200000000000000000 User2
+ 4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000      100000.300000000000000000         100.300000000000000000 User3
+ 5 0xa55a151eb00fded1634d27d1127b4be4627079ea        0.000000000000000000      100000.400000000000000000         100.400000000000000000 User4
+ 6 0xa66a85ede0cbe03694aa9d9de0bb19c99ff55bd9        0.000000000000000000      100000.500000000000000000         100.500000000000000000 User5
+ 7 0xa77a2b9d4b1c010a22a7c565dc418cef683dbcec        0.000000000000000000      100000.600000000000000000         100.600000000000000000 User6
+ 8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.000000000000000000           0.000000000000000000           0.000000000000000000 Fee
+ 9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000           0.000000000000000000 UIFee
+10 0x611d3a5ac803dfb0acc68264d83538fef62fc5f8        0.000000000000000000           0.000000000000000000           0.000000000000000000 Token 'TKN' 'Token'
+11 0x24ad1371437980d21a8ebf2e46a824b860a6d47c        0.000000000000000000           0.000000000000000000           0.000000000000000000 Token 'DPT' 'Dividend Paying Token'
+-- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
+                                                                             10600002.100000000000000000       10602.100000000000000000 Total Token Balances
+-- ------------------------------------------ --------------------------- ------------------------------ ------------------------------ ---------------------------
+
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0x071bc29d847ff1c383a175381620beea47856737814a57e08edca8f7cdf47b33
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0xc353a7c25590bd29c4d1d93e797fd6483988a49b091faaaec86a04eb084c13fd
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0xd3efe883ae7cf26d35f4e412a94d607679fb25c735d48719ad6f74f859843c4a
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0x1044b01a74834f2007758cb390b1beebb5bb78707d64416a1a273a128dd3ba6b
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0xfbfea3311dd3e9c30eb3cf34f5f82b0b579ecc50f8b0b94b5091db528e514d74
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0x47eb2ea090203cc5a7bc1b2fe2581e6b4e0da76be85e5996cd280e98884f02a6
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0x20070f84722633675e53e7a443867d5f2810dc905257c021f8d6824290a55861
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0xa2434f517748df54ba21d03454f96e15813d0ab95911c24283cbaa5b3cfa7684
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0x3849a3b81c8fb58798ea436d9d1ec7c692b54ce7454d0c15147c148f19cd20d3
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0x4a21b4646878b7cc440bd4c907f689184b9da83c4e77606e11e1c2bafeeeefe1
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0x863b72da8484b3a0341b1ad2ceb7505021c36368099f9a8f6faa9cdcb58b714f
+PASS Deploy Group #2 - Distribute tokens and approve spending - 0xe1ac4c677f9197bd373fe3996d4c231adeca7c66ea90afb3c2f56df4dd6ed0c6
+ status=0x1 Success gas=2000000 gasUsed=51801 costETH=0.000259005 costUSD=0.03520136955 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=0 txId=0x071bc29d847ff1c383a175381620beea47856737814a57e08edca8f7cdf47b33 @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51737 costETH=0.000258685 costUSD=0.03515787835 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=1 txId=0xc353a7c25590bd29c4d1d93e797fd6483988a49b091faaaec86a04eb084c13fd @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51801 costETH=0.000259005 costUSD=0.03520136955 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=2 txId=0xd3efe883ae7cf26d35f4e412a94d607679fb25c735d48719ad6f74f859843c4a @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51737 costETH=0.000258685 costUSD=0.03515787835 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=3 txId=0x1044b01a74834f2007758cb390b1beebb5bb78707d64416a1a273a128dd3ba6b @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51801 costETH=0.000259005 costUSD=0.03520136955 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=4 txId=0xfbfea3311dd3e9c30eb3cf34f5f82b0b579ecc50f8b0b94b5091db528e514d74 @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51737 costETH=0.000258685 costUSD=0.03515787835 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=5 txId=0x47eb2ea090203cc5a7bc1b2fe2581e6b4e0da76be85e5996cd280e98884f02a6 @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51801 costETH=0.000259005 costUSD=0.03520136955 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=6 txId=0x20070f84722633675e53e7a443867d5f2810dc905257c021f8d6824290a55861 @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51737 costETH=0.000258685 costUSD=0.03515787835 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=7 txId=0xa2434f517748df54ba21d03454f96e15813d0ab95911c24283cbaa5b3cfa7684 @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51801 costETH=0.000259005 costUSD=0.03520136955 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=8 txId=0x3849a3b81c8fb58798ea436d9d1ec7c692b54ce7454d0c15147c148f19cd20d3 @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51737 costETH=0.000258685 costUSD=0.03515787835 @ ETH/USD=135.91 gasPrice=5 gwei block=8224 txIx=9 txId=0x4a21b4646878b7cc440bd4c907f689184b9da83c4e77606e11e1c2bafeeeefe1 @ 1550140939 Thu, 14 Feb 2019 10:42:19 UTC
+ status=0x1 Success gas=2000000 gasUsed=51801 costETH=0.000259005 costUSD=0.03520136955 @ ETH/USD=135.91 gasPrice=5 gwei block=8225 txIx=0 txId=0x863b72da8484b3a0341b1ad2ceb7505021c36368099f9a8f6faa9cdcb58b714f @ 1550140940 Thu, 14 Feb 2019 10:42:20 UTC
+ status=0x1 Success gas=2000000 gasUsed=51737 costETH=0.000258685 costUSD=0.03515787835 @ ETH/USD=135.91 gasPrice=5 gwei block=8225 txIx=1 txId=0xe1ac4c677f9197bd373fe3996d4c231adeca7c66ea90afb3c2f56df4dd6ed0c6 @ 1550140940 Thu, 14 Feb 2019 10:42:20 UTC
+
+dexOneExchange.address=null
+
+token0ContractAddress=Token 'TKN' 'Token':0x611d
+token0.owner/new=Deployer:0xa11a/Null:0x0000
+token0.details='TKN' 'Token' 18 dp
+token0.totalSupply=10600002.1
+token0.Transfer 0 #8224 from=Null:0x0000 to=User1:0xa22a tokens=100000.1
+token0.Transfer 1 #8224 from=Null:0x0000 to=User2:0xa33a tokens=100000.2
+token0.Transfer 2 #8224 from=Null:0x0000 to=User3:0xa44a tokens=100000.3
+token0.Transfer 3 #8224 from=Null:0x0000 to=User4:0xa55a tokens=100000.4
+token0.Transfer 4 #8224 from=Null:0x0000 to=User5:0xa66a tokens=100000.5
+token0.Transfer 5 #8225 from=Null:0x0000 to=User6:0xa77a tokens=100000.6
+
+token1ContractAddress=Token 'DPT' 'Dividend Paying Token':0x24ad
+token1.owner/new=Deployer:0xa11a/Null:0x0000
+token1.details='DPT' 'Dividend Paying Token' 18 dp
+token1.totalSupply=10602.1
+token1.Transfer 0 #8224 from=Null:0x0000 to=User1:0xa22a tokens=100.1
+token1.Transfer 1 #8224 from=Null:0x0000 to=User2:0xa33a tokens=100.2
+token1.Transfer 2 #8224 from=Null:0x0000 to=User3:0xa44a tokens=100.3
+token1.Transfer 3 #8224 from=Null:0x0000 to=User4:0xa55a tokens=100.4
+token1.Transfer 4 #8224 from=Null:0x0000 to=User5:0xa66a tokens=100.5
+token1.Transfer 5 #8225 from=Null:0x0000 to=User6:0xa77a tokens=100.6
 
 

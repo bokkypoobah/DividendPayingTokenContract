@@ -77,7 +77,7 @@ console.log("RESULT: ");
 var i;
 
 // -----------------------------------------------------------------------------
-var deployGroup1Message = "Deploy Group #2";
+var deployGroup1Message = "Deploy Group #1";
 var numberOfTokens = $NUMBEROFTOKENS;
 var _tokenClasses = "$TOKENCLASSES".split(":");
 var _tokenSymbols = "$TOKENSYMBOLS".split(":");
@@ -143,144 +143,10 @@ for (i = 0; i < numberOfTokens; i++) {
 console.log("RESULT: ");
 
 
-exit;
-
-// -----------------------------------------------------------------------------
-var deployGroup1Message = "Deploy Group #1";
-// -----------------------------------------------------------------------------
-console.log("RESULT: ---------- " + deployGroup1Message + " ----------");
-var tokenContract = web3.eth.contract(tokenAbi);
-var tokenTx = null;
-var tokenAddress = null;
-var token = tokenContract.new("$SYMBOL", "$NAME", "$DECIMALS", deployer, "$INITIALSUPPLY", {from: deployer, data: tokenBin, gas: 4000000, gasPrice: defaultGasPrice},
-  function(e, contract) {
-    if (!e) {
-      if (!contract.address) {
-        tokenTx = contract.transactionHash;
-      } else {
-        tokenAddress = contract.address;
-        addAccount(tokenAddress, "Token '" + token.symbol() + "' '" + token.name() + "'");
-        console.log("DATA: var tokenAddress=\"" + tokenAddress + "\";");
-        console.log("DATA: var tokenAbi=" + JSON.stringify(tokenAbi) + ";");
-        console.log("DATA: var token=eth.contract(tokenAbi).at(tokenAddress);");
-      }
-    }
-  }
-);
-while (txpool.status.pending > 0) {
-}
-printBalances();
-failIfTxStatusError(tokenTx, deployGroup1Message + " - Token '" + token.symbol() + "' '" + token.name() + "'");
-printTxData("tokenTx", tokenTx);
-console.log("RESULT: ");
-
-exit;
-
-NUMBEROFTOKENS=2
-TOKENSYMBOLS="TKN:DPT"
-TOKENNAMES="Token:Dividend Paying Token"
-TOKENDECIMALS="18:18"
-TOKENINITIALSUPPLIES="10000000:10000"
-TOKENINITIALDISTRIBUTIONS="100000:100"
-
-
-
 // -----------------------------------------------------------------------------
 var deployGroup2Message = "Deploy Group #2";
-var numberOfTokens = $NUMBEROFTOKENS;
-var _tokenSymbols = "$TOKENSYMBOLS".split(":");
-var _tokenNames = "$TOKENNAMES".split(":");
-var _tokenDecimals = "$TOKENDECIMALS".split(":");
-var _tokenInitialSupplies = "$TOKENINITIALSUPPLIES".split(":");
-var _tokenInitialDistributions = "$TOKENINITIALDISTRIBUTIONS".split(":");
-// console.log("RESULT: _tokenSymbols = " + JSON.stringify(_tokenSymbols));
-// console.log("RESULT: _tokenNames = " + JSON.stringify(_tokenNames));
-// console.log("RESULT: _tokenDecimals = " + JSON.stringify(_tokenDecimals));
-// console.log("RESULT: _tokenInitialSupplies = " + JSON.stringify(_tokenInitialSupplies));
-// console.log("RESULT: _tokenInitialDistributions = " + JSON.stringify(_tokenInitialDistributions));
 // -----------------------------------------------------------------------------
 console.log("RESULT: ---------- " + deployGroup2Message + " ----------");
-var rbtLibName = "BokkyPooBahsRedBlackTreeLibrary.sol:BokkyPooBahsRedBlackTreeLibrary";
-var rbtLibSearchHash = "__\$" + web3.sha3(rbtLibName).substring(2, 36) + "\$__";
-// console.log("RESULT: rbtLibSearchHash='" + rbtLibSearchHash + "'");
-// console.log("RESULT: old='" + dexzBin + "'");
-var newDexzBin = dexzBin.split(rbtLibSearchHash).join(rbtLibAddress.substring(2, 42));
-// console.log("RESULT: new='" + newDexzBin + "'");
-
-var dexzContract = web3.eth.contract(dexzAbi);
-var dexzTx = null;
-var dexzAddress = null;
-var dexz = dexzContract.new(feeAccount, {from: deployer, data: newDexzBin, gas: 6400000, gasPrice: defaultGasPrice},
-  function(e, contract) {
-    if (!e) {
-      if (!contract.address) {
-        dexzTx = contract.transactionHash;
-      } else {
-        dexzAddress = contract.address;
-        addAccount(dexzAddress, "DexOneExchange");
-        addDexOneExchangeContractAddressAndAbi(dexzAddress, dexzAbi);
-        console.log("DATA: var dexzAddress=\"" + dexzAddress + "\";");
-        console.log("DATA: var dexzAbi=" + JSON.stringify(dexzAbi) + ";");
-        console.log("DATA: var dexz=eth.contract(dexzAbi).at(dexzAddress);");
-      }
-    }
-  }
-);
-var tokenTxs = [];
-var tokenAddresses = [];
-var tokens = [];
-var tokenTxsToIndexMapping = {};
-for (i = 0; i < numberOfTokens; i++) {
-  var tokenContract = web3.eth.contract(mintableTokenAbi);
-  tokens[i] = tokenContract.new(_tokenSymbols[i], _tokenNames[i], _tokenDecimals[i], deployer, _tokenInitialSupplies[i], {from: deployer, data: mintableTokenBin, gas: 2000000, gasPrice: defaultGasPrice},
-    function(e, contract) {
-      if (!e) {
-        if (!contract.address) {
-          // var i = tokenTxsToIndexMapping[contract.transactionHash];
-          // tokenTxs[i] = contract.transactionHash;
-        } else {
-          var i = tokenTxsToIndexMapping[contract.transactionHash];
-          tokenTxs[i] = contract.transactionHash;
-          tokenAddresses[i] = contract.address;
-          addAccount(tokenAddresses[i], "Token '" + tokens[i].symbol() + "' '" + tokens[i].name() + "'");
-          addAddressSymbol(tokenAddresses[i], tokens[i].symbol());
-          addTokenContractAddressAndAbi(i, tokenAddresses[i], mintableTokenAbi);
-          console.log("DATA: var token" + i + "Address=\"" + tokenAddresses[i] + "\";");
-          if (i == 0) {
-            console.log("DATA: var tokenAbi=" + JSON.stringify(mintableTokenAbi) + ";");
-          }
-          console.log("DATA: var token" + i + "=eth.contract(tokenAbi).at(token" + i + "Address);");
-        }
-      }
-    }
-  );
-  tokenTxsToIndexMapping[tokens[i].transactionHash] = i;
-}
-while (txpool.status.pending > 0) {
-}
-printBalances();
-failIfTxStatusError(dexzTx, deployGroup2Message + " - DexOneExchange");
-for (i = 0; i < numberOfTokens; i++) {
-  failIfTxStatusError(tokenTxs[i], deployGroup2Message + " - Token ''" + tokens[i].symbol() + "' '" + tokens[i].name() + "'");
-}
-printTxData("dexzTx", dexzTx);
-for (i = 0; i < numberOfTokens; i++) {
-  printTxData("tokenTx[" + i + "]", tokenTxs[i]);
-}
-console.log("RESULT: ");
-printDexOneExchangeContractDetails();
-console.log("RESULT: ");
-for (i = 0; i < numberOfTokens; i++) {
-  printTokenContractDetails(i);
-  console.log("RESULT: ");
-}
-console.log("RESULT: ");
-
-
-// -----------------------------------------------------------------------------
-var deployGroup3Message = "Deploy Group #3";
-// -----------------------------------------------------------------------------
-console.log("RESULT: ---------- " + deployGroup3Message + " ----------");
 var users = [user1, user2, user3, user4, user5, user6];
 var deployGroup2_Txs = [];
 var userNumber = 1;
@@ -288,8 +154,8 @@ users.forEach(function(u) {
   for (i = 0; i < numberOfTokens; i++) {
     var tx = tokens[i].mint(u, new BigNumber(_tokenInitialDistributions[i]).add(userNumber/10).shift(_tokenDecimals[i]), {from: deployer, gas: 2000000, gasPrice: defaultGasPrice});
     deployGroup2_Txs.push(tx);
-    tx = tokens[i].approve(dexzAddress, new BigNumber(_tokenInitialDistributions[i]).add(userNumber/10).shift(_tokenDecimals[i]), {from: u, gas: 2000000, gasPrice: defaultGasPrice});
-    deployGroup2_Txs.push(tx);
+    // tx = tokens[i].approve(dexzAddress, new BigNumber(_tokenInitialDistributions[i]).add(userNumber/10).shift(_tokenDecimals[i]), {from: u, gas: 2000000, gasPrice: defaultGasPrice});
+    // deployGroup2_Txs.push(tx);
   }
   userNumber++;
 });
@@ -297,7 +163,7 @@ while (txpool.status.pending > 0) {
 }
 printBalances();
 deployGroup2_Txs.forEach(function(t) {
-  failIfTxStatusError(t, deployGroup3Message + " - Distribute tokens and approve spending - " + t);
+  failIfTxStatusError(t, deployGroup2Message + " - Distribute tokens and approve spending - " + t);
 });
 deployGroup2_Txs.forEach(function(t) {
   printTxData("", t);
@@ -310,6 +176,8 @@ for (i = 0; i < numberOfTokens; i++) {
   console.log("RESULT: ");
 }
 console.log("RESULT: ");
+
+exit;
 
 
 // -----------------------------------------------------------------------------
