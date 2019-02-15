@@ -45,9 +45,6 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         _totalSupply = initialSupply;
         emit Transfer(address(0), tokenOwner, _totalSupply);
     }
-    function justAnotherFunctionToBeDeleted() public view returns (string memory) {
-        return _symbol;
-    }
     function symbol() public view returns (string memory) {
         return _symbol;
     }
@@ -97,7 +94,7 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         return true;
     }
     function burn(address tokenOwner, uint tokens) public onlyOwner returns (bool success) {
-        if (tokens < balances[tokenOwner]) {
+        if (tokens > balances[tokenOwner]) {
             tokens = balances[tokenOwner];
         }
         balances[tokenOwner] = balances[tokenOwner].sub(tokens);
