@@ -206,9 +206,6 @@ contract MintableToken is MintableTokenInterface, Owned {
         return true;
     }
     function burn(address tokenOwner, uint tokens) public onlyOwner returns (bool success) {
-        if (tokens > balances[tokenOwner]) {
-            tokens = balances[tokenOwner];
-        }
         balances[tokenOwner] = balances[tokenOwner].sub(tokens);
         _totalSupply = _totalSupply.sub(tokens);
         emit Transfer(tokenOwner, address(0), tokens);

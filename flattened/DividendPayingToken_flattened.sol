@@ -181,10 +181,11 @@ function disburse(uint amount) {
       _ ;
     }
 
-    function disburse(uint amount) {
+    function disburse(uint amount) public {
         _totalDividendPoints += (amount * pointMultiplier / _totalSupply);
-        _totalSupply += amount;
+        // ? _totalSupply += amount;
         _unclaimedDividends += amount;
+        // send ETH
     }
 
     constructor(string memory symbol, string memory name, uint8 decimals, address tokenOwner, uint initialSupply) public {
