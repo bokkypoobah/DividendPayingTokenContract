@@ -143,15 +143,56 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
     uint8 _decimals;
     uint _totalSupply;
 
-    mapping(address => uint) balances;
+    uint _totalDividendPoints;
+    uint _unclaimedDividends;
+
+    uint constant pointMultiplier = 10e18;
+
+    struct Account {
+      uint balance;
+      uint lastDividendPoints;
+    }
+    mapping(address => Account) accounts;
     mapping(address => mapping(address => uint)) allowed;
+
+/*
+
+
+
+
+function disburse(uint amount) {
+  totalDividendPoints += (amount * pointsMultiplier / totalSupply);
+  totalSupply += amount;
+  unclaimedDividends += amount;
+}*/
+
+    function dividendsOwing(address account) internal view returns(uint) {
+        uint newDividendPoints = _totalDividendPoints - accounts[account].lastDividendPoints;
+        return (accounts[account].balance * newDividendPoints) / pointMultiplier;
+    }
+
+    modifier updateAccount(address account) {
+        uint owing = dividendsOwing(account);
+        if (owing > 0) {
+            _unclaimedDividends -= owing;
+            accounts[account].balance += owing;
+            accounts[account].lastDividendPoints = _totalDividendPoints;
+        }
+      _ ;
+    }
+
+    function disburse(uint amount) {
+        _totalDividendPoints += (amount * pointMultiplier / _totalSupply);
+        _totalSupply += amount;
+        _unclaimedDividends += amount;
+    }
 
     constructor(string memory symbol, string memory name, uint8 decimals, address tokenOwner, uint initialSupply) public {
         initOwned(msg.sender);
         _symbol = symbol;
         _name = name;
         _decimals = decimals;
-        balances[tokenOwner] = initialSupply;
+        accounts[tokenOwner].balance = initialSupply;
         _totalSupply = initialSupply;
         emit Transfer(address(0), tokenOwner, _totalSupply);
     }
@@ -165,14 +206,14 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         return _decimals;
     }
     function totalSupply() public view returns (uint) {
-        return _totalSupply.sub(balances[address(0)]);
+        return _totalSupply.sub(accounts[address(0)].balance);
     }
     function balanceOf(address tokenOwner) public view returns (uint balance) {
-        return balances[tokenOwner];
+        return accounts[tokenOwner].balance;
     }
     function transfer(address to, uint tokens) public returns (bool success) {
-        balances[msg.sender] = balances[msg.sender].sub(tokens);
-        balances[to] = balances[to].add(tokens);
+        accounts[msg.sender].balance = accounts[msg.sender].balance.sub(tokens);
+        accounts[to].balance = accounts[to].balance.add(tokens);
         emit Transfer(msg.sender, to, tokens);
         return true;
     }
@@ -182,9 +223,9 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         return true;
     }
     function transferFrom(address from, address to, uint tokens) public returns (bool success) {
-        balances[from] = balances[from].sub(tokens);
+        accounts[from].balance = accounts[from].balance.sub(tokens);
         allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
-        balances[to] = balances[to].add(tokens);
+        accounts[to].balance = accounts[to].balance.add(tokens);
         emit Transfer(from, to, tokens);
         return true;
     }
@@ -198,16 +239,16 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
         return true;
     }
     function mint(address tokenOwner, uint tokens) public onlyOwner returns (bool success) {
-        balances[tokenOwner] = balances[tokenOwner].add(tokens);
+        accounts[tokenOwner].balance = accounts[tokenOwner].balance.add(tokens);
         _totalSupply = _totalSupply.add(tokens);
         emit Transfer(address(0), tokenOwner, tokens);
         return true;
     }
     function burn(address tokenOwner, uint tokens) public onlyOwner returns (bool success) {
-        if (tokens > balances[tokenOwner]) {
-            tokens = balances[tokenOwner];
+        if (tokens > accounts[tokenOwner].balance) {
+            tokens = accounts[tokenOwner].balance;
         }
-        balances[tokenOwner] = balances[tokenOwner].sub(tokens);
+        accounts[tokenOwner].balance = accounts[tokenOwner].balance.sub(tokens);
         _totalSupply = _totalSupply.sub(tokens);
         emit Transfer(tokenOwner, address(0), tokens);
         return true;
