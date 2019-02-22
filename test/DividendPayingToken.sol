@@ -68,7 +68,7 @@ function disburse(uint amount) {
             accounts[account].balance += owing;
             accounts[account].lastDividendPoints = _totalDividendPoints;
         }
-      _ ;
+        _ ;
     }
 
     function disburse(uint amount) public {
@@ -136,9 +136,6 @@ function disburse(uint amount) {
         return true;
     }
     function burn(address tokenOwner, uint tokens) public onlyOwner returns (bool success) {
-        if (tokens > accounts[tokenOwner].balance) {
-            tokens = accounts[tokenOwner].balance;
-        }
         accounts[tokenOwner].balance = accounts[tokenOwner].balance.sub(tokens);
         _totalSupply = _totalSupply.sub(tokens);
         emit Transfer(tokenOwner, address(0), tokens);
