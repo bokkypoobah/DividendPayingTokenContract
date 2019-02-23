@@ -36,6 +36,8 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
     uint _totalDividendPoints;
     uint _unclaimedDividends;
 
+    address public dividendToken;
+
     uint constant pointMultiplier = 10e18;
 
     struct Account {
@@ -44,6 +46,8 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
     }
     mapping(address => Account) accounts;
     mapping(address => mapping(address => uint)) allowed;
+
+    event LogInfo(string topic, uint number, bytes32 data, string note, address addr);
 
 /*
 
@@ -73,12 +77,17 @@ function disburse(uint amount) {
 
     function disburse(uint amount) public {
         _totalDividendPoints += (amount * pointMultiplier / _totalSupply);
-        // ? _totalSupply += amount;
         _unclaimedDividends += amount;
-        // send ETH
     }
 
-    constructor(string memory symbol, string memory name, uint8 decimals, address tokenOwner, uint initialSupply) public {
+    function depositDividends(address token, uint dividends) public {
+        emit LogInfo("depositDividends: token", 0, 0x0, "", token);
+        emit LogInfo("depositDividends: dividends", dividends, 0x0, "", address(0));
+        ERC20Interface(token).transferFrom(msg.sender, address(this), dividends);
+        // disburse(dividends);
+    }
+
+    constructor(string memory symbol, string memory name, uint8 decimals, address tokenOwner, uint initialSupply, address _dividendToken) public {
         initOwned(msg.sender);
         _symbol = symbol;
         _name = name;
@@ -86,6 +95,7 @@ function disburse(uint amount) {
         accounts[tokenOwner].balance = initialSupply;
         _totalSupply = initialSupply;
         emit Transfer(address(0), tokenOwner, _totalSupply);
+        dividendToken = _dividendToken;
     }
     function symbol() public view returns (string memory) {
         return _symbol;

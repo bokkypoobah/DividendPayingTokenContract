@@ -347,6 +347,20 @@ function printTokenContractDetails(j) {
     });
     transferEvents.stopWatching();
 
+    if (j == 1) {
+      var logUintEvents = contract.LogInfo({}, { fromBlock: tokenFromBlock[j], toBlock: latestBlock });
+      i = 0;
+      logUintEvents.watch(function (error, result) {
+        var noteStr = (result.args.note != "") ? " " + result.args.note : "";
+        var addrStr = (result.args.addr != "0x0000000000000000000000000000000000000000") ? " " + getShortAddressName(result.args.addr) : "";
+        var numberStr = (Math.abs(result.args.number) < 10000000000) ? result.args.number : result.args.number.shift(-18);
+        var dataStr = result.args.data == "0x0000000000000000000000000000000000000000000000000000000000000000" ? "" : " " + result.args.data;
+        console.log("RESULT: LogInfo " + i++ + " #" + result.blockNumber + " " + result.args.topic +
+         " " + numberStr + dataStr + noteStr + addrStr);
+      });
+      logUintEvents.stopWatching();
+    }
+
     tokenFromBlock[j] = latestBlock + 1;
   }
 }

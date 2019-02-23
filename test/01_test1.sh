@@ -74,6 +74,9 @@ printBalances();
 console.log("RESULT: ");
 
 
+var TKN=0;
+var DPT=1;
+
 var i;
 
 // -----------------------------------------------------------------------------
@@ -104,26 +107,49 @@ for (i = 0; i < numberOfTokens; i++) {
   var bin = (tokenClass === "$DIVIDENDPAYINGTOKENNAME") ? dividendPayingTokenBin : tokenBin;
   console.log("RESULT: OUTER " + i + " abi=" + JSON.stringify(abi));
   var tokenContract = web3.eth.contract(abi);
-  tokens[i] = tokenContract.new(_tokenSymbols[i], _tokenNames[i], _tokenDecimals[i], deployer, new BigNumber(_tokenInitialSupplies[i]).shift(_tokenDecimals[i]), {from: deployer, data: bin, gas: 2000000, gasPrice: defaultGasPrice},
-    function(e, contract) {
-      if (!e) {
-        if (!contract.address) {
-          // var i = tokenTxsToIndexMapping[contract.transactionHash];
-          // tokenTxs[i] = contract.transactionHash;
-        } else {
-          var i = tokenTxsToIndexMapping[contract.transactionHash];
-          tokenTxs[i] = contract.transactionHash;
-          tokenAddresses[i] = contract.address;
-          addAccount(tokenAddresses[i], "Token '" + tokens[i].symbol() + "' '" + tokens[i].name() + "'");
-          addAddressSymbol(tokenAddresses[i], tokens[i].symbol());
-          addTokenContractAddressAndAbi(i, tokenAddresses[i], contract.abi);
-          console.log("DATA: var token" + i + "Address=\"" + tokenAddresses[i] + "\";");
-          console.log("DATA: var token" + i + "Abi=" + JSON.stringify(contract.abi) + ";");
-          console.log("DATA: var token" + i + "=eth.contract(token" + i + "Abi).at(token" + i + "Address);");
+  if (tokenClass === "$DIVIDENDPAYINGTOKENNAME") {
+    tokens[i] = tokenContract.new(_tokenSymbols[i], _tokenNames[i], _tokenDecimals[i], deployer, new BigNumber(_tokenInitialSupplies[i]).shift(_tokenDecimals[i]), tokens[TKN].address, {from: deployer, data: bin, gas: 2000000, gasPrice: defaultGasPrice},
+      function(e, contract) {
+        if (!e) {
+          if (!contract.address) {
+            // var i = tokenTxsToIndexMapping[contract.transactionHash];
+            // tokenTxs[i] = contract.transactionHash;
+          } else {
+            var i = tokenTxsToIndexMapping[contract.transactionHash];
+            tokenTxs[i] = contract.transactionHash;
+            tokenAddresses[i] = contract.address;
+            addAccount(tokenAddresses[i], "Token '" + tokens[i].symbol() + "' '" + tokens[i].name() + "'");
+            addAddressSymbol(tokenAddresses[i], tokens[i].symbol());
+            addTokenContractAddressAndAbi(i, tokenAddresses[i], contract.abi);
+            console.log("DATA: var token" + i + "Address=\"" + tokenAddresses[i] + "\";");
+            console.log("DATA: var token" + i + "Abi=" + JSON.stringify(contract.abi) + ";");
+            console.log("DATA: var token" + i + "=eth.contract(token" + i + "Abi).at(token" + i + "Address);");
+          }
         }
       }
-    }
-  );
+    );
+  } else {
+    tokens[i] = tokenContract.new(_tokenSymbols[i], _tokenNames[i], _tokenDecimals[i], deployer, new BigNumber(_tokenInitialSupplies[i]).shift(_tokenDecimals[i]), {from: deployer, data: bin, gas: 2000000, gasPrice: defaultGasPrice},
+      function(e, contract) {
+        if (!e) {
+          if (!contract.address) {
+            // var i = tokenTxsToIndexMapping[contract.transactionHash];
+            // tokenTxs[i] = contract.transactionHash;
+          } else {
+            var i = tokenTxsToIndexMapping[contract.transactionHash];
+            tokenTxs[i] = contract.transactionHash;
+            tokenAddresses[i] = contract.address;
+            addAccount(tokenAddresses[i], "Token '" + tokens[i].symbol() + "' '" + tokens[i].name() + "'");
+            addAddressSymbol(tokenAddresses[i], tokens[i].symbol());
+            addTokenContractAddressAndAbi(i, tokenAddresses[i], contract.abi);
+            console.log("DATA: var token" + i + "Address=\"" + tokenAddresses[i] + "\";");
+            console.log("DATA: var token" + i + "Abi=" + JSON.stringify(contract.abi) + ";");
+            console.log("DATA: var token" + i + "=eth.contract(token" + i + "Abi).at(token" + i + "Address);");
+          }
+        }
+      }
+    );
+  }
   tokenTxsToIndexMapping[tokens[i].transactionHash] = i;
 }
 while (txpool.status.pending > 0) {
@@ -152,7 +178,7 @@ var deployGroup2_Txs = [];
 var userNumber = 1;
 users.forEach(function(u) {
   for (i = 0; i < numberOfTokens; i++) {
-    var tx = tokens[i].mint(u, new BigNumber(_tokenInitialDistributions[i]).add(userNumber/10).shift(_tokenDecimals[i]), {from: deployer, gas: 2000000, gasPrice: defaultGasPrice});
+    var tx = tokens[i].mint(u, new BigNumber(_tokenInitialDistributions[i]).shift(_tokenDecimals[i]), {from: deployer, gas: 2000000, gasPrice: defaultGasPrice});
     deployGroup2_Txs.push(tx);
     // tx = tokens[i].approve(dexzAddress, new BigNumber(_tokenInitialDistributions[i]).add(userNumber/10).shift(_tokenDecimals[i]), {from: u, gas: 2000000, gasPrice: defaultGasPrice});
     // deployGroup2_Txs.push(tx);
@@ -176,6 +202,34 @@ for (i = 0; i < numberOfTokens; i++) {
   console.log("RESULT: ");
 }
 console.log("RESULT: ");
+
+
+// -----------------------------------------------------------------------------
+var depositDividend1Message = "Deposit Dividends #1";
+var dividends1 = new BigNumber(1000).shift(18);
+// -----------------------------------------------------------------------------
+console.log("RESULT: ---------- " + depositDividend1Message + " ----------");
+var depositDividend1_1Tx = tokens[TKN].approve(tokens[DPT].address, dividends1, {from: deployer, gas: 2000000, gasPrice: defaultGasPrice});
+while (txpool.status.pending > 0) {
+}
+var depositDividend1_2Tx = tokens[DPT].depositDividends(tokens[TKN].address, dividends1, {from: deployer, gas: 2000000, gasPrice: defaultGasPrice});
+while (txpool.status.pending > 0) {
+}
+printBalances();
+failIfTxStatusError(depositDividend1_1Tx, depositDividend1Message + " - deployer " + tokens[TKN].symbol() + ".approve(DPT, " + dividends1.shift(-18) + ")");
+failIfTxStatusError(depositDividend1_2Tx, depositDividend1Message + " - deployer TKN.depositDividends(" + dividends1.shift(-18) + ")");
+printTxData("depositDividend1_1Tx", depositDividend1_1Tx);
+printTxData("depositDividend1_2Tx", depositDividend1_2Tx);
+console.log("RESULT: ");
+printDexOneExchangeContractDetails();
+console.log("RESULT: ");
+for (i = 0; i < numberOfTokens; i++) {
+  printTokenContractDetails(i);
+  console.log("RESULT: ");
+}
+console.log("RESULT: ");
+}
+
 
 exit;
 
