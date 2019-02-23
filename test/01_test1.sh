@@ -173,7 +173,7 @@ console.log("RESULT: ");
 var deployGroup2Message = "Deploy Group #2";
 // -----------------------------------------------------------------------------
 console.log("RESULT: ---------- " + deployGroup2Message + " ----------");
-var users = [user1, user2, user3, user4, user5, user6];
+var users = [user1, user2, user3, user4];
 var deployGroup2_Txs = [];
 var userNumber = 1;
 users.forEach(function(u) {

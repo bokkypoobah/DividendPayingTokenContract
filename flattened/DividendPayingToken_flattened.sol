@@ -148,7 +148,7 @@ contract DividendPayingToken is MintableTokenInterface, Owned {
 
     address public dividendToken;
 
-    uint constant pointMultiplier = 10e18;
+    uint public constant pointMultiplier = 10e18;
 
     struct Account {
       uint balance;
@@ -170,11 +170,19 @@ function disburse(uint amount) {
   unclaimedDividends += amount;
 }*/
 
-    function dividendsOwing(address account) internal view returns(uint) {
+
+
+    function totalDividendPoints() public view returns (uint) {
+        return _totalDividendPoints;
+    }
+    function unclaimedDividends() public view returns (uint) {
+        return _unclaimedDividends;
+    }
+
+    function dividendsOwing(address account) public view returns (uint) {
         uint newDividendPoints = _totalDividendPoints - accounts[account].lastDividendPoints;
         return (accounts[account].balance * newDividendPoints) / pointMultiplier;
     }
-
     modifier updateAccount(address account) {
         uint owing = dividendsOwing(account);
         if (owing > 0) {
@@ -185,16 +193,16 @@ function disburse(uint amount) {
         _ ;
     }
 
-    function disburse(uint amount) public {
-        _totalDividendPoints += (amount * pointMultiplier / _totalSupply);
-        _unclaimedDividends += amount;
-    }
-
     function depositDividends(address token, uint dividends) public {
         emit LogInfo("depositDividends: token", 0, 0x0, "", token);
         emit LogInfo("depositDividends: dividends", dividends, 0x0, "", address(0));
+        emit LogInfo("depositDividends: pointMultiplier", pointMultiplier, 0x0, "", address(0));
+        emit LogInfo("depositDividends: _totalSupply", _totalSupply, 0x0, "", address(0));
+        _totalDividendPoints += (dividends * pointMultiplier / _totalSupply);
+        _unclaimedDividends += dividends;
+        emit LogInfo("depositDividends: _totalDividendPoints", _totalDividendPoints, 0x0, "", address(0));
+        emit LogInfo("depositDividends: _unclaimedDividends", _unclaimedDividends, 0x0, "", address(0));
         ERC20Interface(token).transferFrom(msg.sender, address(this), dividends);
-        // disburse(dividends);
     }
 
     constructor(string memory symbol, string memory name, uint8 decimals, address tokenOwner, uint initialSupply, address _dividendToken) public {

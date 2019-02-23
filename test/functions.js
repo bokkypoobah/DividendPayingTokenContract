@@ -9,15 +9,11 @@ var accounts = [];
 var accountNames = {};
 
 addAccount(eth.accounts[0], "Miner");
-addAccount(eth.accounts[1], "Deployer");
+addAccount(eth.accounts[1], "Deployer + Dividend Payer");
 addAccount(eth.accounts[2], "User1");
 addAccount(eth.accounts[3], "User2");
 addAccount(eth.accounts[4], "User3");
 addAccount(eth.accounts[5], "User4");
-addAccount(eth.accounts[6], "User5");
-addAccount(eth.accounts[7], "User6");
-addAccount(eth.accounts[8], "Fee");
-addAccount(eth.accounts[9], "UIFee");
 
 var miner = eth.accounts[0];
 var deployer = eth.accounts[1];
@@ -25,10 +21,6 @@ var user1 = eth.accounts[2];
 var user2 = eth.accounts[3];
 var user3 = eth.accounts[4];
 var user4 = eth.accounts[5];
-var user5 = eth.accounts[6];
-var user6 = eth.accounts[7];
-var feeAccount = eth.accounts[8];
-var uiFeeAccount = eth.accounts[9];
 
 console.log("DATA: var miner=\"" + eth.accounts[0] + "\";");
 console.log("DATA: var deployer=\"" + eth.accounts[1] + "\";");
@@ -36,10 +28,6 @@ console.log("DATA: var user1=\"" + eth.accounts[2] + "\";");
 console.log("DATA: var user2=\"" + eth.accounts[3] + "\";");
 console.log("DATA: var user3=\"" + eth.accounts[4] + "\";");
 console.log("DATA: var user4=\"" + eth.accounts[5] + "\";");
-console.log("DATA: var user5=\"" + eth.accounts[6] + "\";");
-console.log("DATA: var user6=\"" + eth.accounts[7] + "\";");
-console.log("DATA: var feeAccount=\"" + eth.accounts[8] + "\";");
-console.log("DATA: var uiFeeAccount=\"" + eth.accounts[9] + "\";");
 
 var baseBlock = eth.blockNumber;
 
@@ -316,6 +304,16 @@ function printTokenContractDetails(j) {
     console.log("RESULT: token" + j + ".owner/new=" + getShortAddressName(contract.owner()) + "/" + getShortAddressName(contract.newOwner()));
     console.log("RESULT: token" + j + ".details='" + contract.symbol() + "' '" + contract.name() + "' " + decimals + " dp");
     console.log("RESULT: token" + j + ".totalSupply=" + contract.totalSupply().shift(-decimals));
+    // Dividend paying token
+    if (j == 1) {
+      console.log("RESULT: token" + j + ".pointMultiplier=" + contract.pointMultiplier().shift(-decimals));
+      console.log("RESULT: token" + j + ".totalDividendPoints=" + contract.totalDividendPoints().shift(-decimals));
+      console.log("RESULT: token" + j + ".unclaimedDividends=" + contract.unclaimedDividends().shift(-decimals));
+      console.log("RESULT: token" + j + ".dividendsOwing(user1)=" + contract.dividendsOwing(user1).shift(-decimals));
+      console.log("RESULT: token" + j + ".dividendsOwing(user2)=" + contract.dividendsOwing(user2).shift(-decimals));
+      console.log("RESULT: token" + j + ".dividendsOwing(user3)=" + contract.dividendsOwing(user3).shift(-decimals));
+      console.log("RESULT: token" + j + ".dividendsOwing(user4)=" + contract.dividendsOwing(user4).shift(-decimals));
+    }
 
     var latestBlock = eth.blockNumber;
     var i;
@@ -347,6 +345,7 @@ function printTokenContractDetails(j) {
     });
     transferEvents.stopWatching();
 
+    // Dividend paying token
     if (j == 1) {
       var logUintEvents = contract.LogInfo({}, { fromBlock: tokenFromBlock[j], toBlock: latestBlock });
       i = 0;
