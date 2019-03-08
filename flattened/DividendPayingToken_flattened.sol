@@ -183,14 +183,20 @@ function disburse(uint amount) {
         uint newDividendPoints = _totalDividendPoints - accounts[account].lastDividendPoints;
         return (accounts[account].balance * newDividendPoints) / pointMultiplier;
     }
-    modifier updateAccount(address account) {
+    function updateAccount(address account) internal {
         uint owing = dividendsOwing(account);
+        emit LogInfo("depositDividends: owing", owing, 0x0, "", account);
         if (owing > 0) {
-            _unclaimedDividends -= owing;
-            accounts[account].balance += owing;
+            emit LogInfo("depositDividends: _unclaimedDividends before", _unclaimedDividends, 0x0, "", account);
+            _unclaimedDividends = _unclaimedDividends.sub(owing);
+            emit LogInfo("depositDividends: _unclaimedDividends after", _unclaimedDividends, 0x0, "", account);
+            emit LogInfo("depositDividends: accounts[account].balance", accounts[account].balance, 0x0, "", account);
+            accounts[account].balance = accounts[account].balance.add(owing);
+            emit LogInfo("depositDividends: accounts[account].balance", accounts[account].balance, 0x0, "", account);
+            emit LogInfo("depositDividends: accounts[account].lastDividendPoints before", accounts[account].lastDividendPoints, 0x0, "", account);
             accounts[account].lastDividendPoints = _totalDividendPoints;
+             emit LogInfo("depositDividends: accounts[account].lastDividendPoints after", accounts[account].lastDividendPoints, 0x0, "", account);
         }
-        _ ;
     }
 
     function depositDividends(address token, uint dividends) public {
@@ -198,11 +204,16 @@ function disburse(uint amount) {
         emit LogInfo("depositDividends: dividends", dividends, 0x0, "", address(0));
         emit LogInfo("depositDividends: pointMultiplier", pointMultiplier, 0x0, "", address(0));
         emit LogInfo("depositDividends: _totalSupply", _totalSupply, 0x0, "", address(0));
-        _totalDividendPoints += (dividends * pointMultiplier / _totalSupply);
-        _unclaimedDividends += dividends;
+        _totalDividendPoints = _totalDividendPoints.add((dividends * pointMultiplier / _totalSupply));
+        _unclaimedDividends = _unclaimedDividends.add(dividends);
         emit LogInfo("depositDividends: _totalDividendPoints", _totalDividendPoints, 0x0, "", address(0));
         emit LogInfo("depositDividends: _unclaimedDividends", _unclaimedDividends, 0x0, "", address(0));
         ERC20Interface(token).transferFrom(msg.sender, address(this), dividends);
+    }
+
+    function withdrawDividends(address token) public returns (uint withdrawn) {
+        updateAccount(msg.sender);
+        withdrawn = 0;
     }
 
     constructor(string memory symbol, string memory name, uint8 decimals, address tokenOwner, uint initialSupply, address _dividendToken) public {
@@ -233,6 +244,8 @@ function disburse(uint amount) {
     function transfer(address to, uint tokens) public returns (bool success) {
         accounts[msg.sender].balance = accounts[msg.sender].balance.sub(tokens);
         accounts[to].balance = accounts[to].balance.add(tokens);
+        updateAccount(msg.sender);
+        updateAccount(to);
         emit Transfer(msg.sender, to, tokens);
         return true;
     }
@@ -245,6 +258,8 @@ function disburse(uint amount) {
         accounts[from].balance = accounts[from].balance.sub(tokens);
         allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
         accounts[to].balance = accounts[to].balance.add(tokens);
+        updateAccount(from);
+        updateAccount(to);
         emit Transfer(from, to, tokens);
         return true;
     }

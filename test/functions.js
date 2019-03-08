@@ -312,7 +312,6 @@ function printTokenContractDetails(j) {
       console.log("RESULT: token" + j + ".dividendsOwing(user1)=" + contract.dividendsOwing(user1).shift(-decimals));
       console.log("RESULT: token" + j + ".dividendsOwing(user2)=" + contract.dividendsOwing(user2).shift(-decimals));
       console.log("RESULT: token" + j + ".dividendsOwing(user3)=" + contract.dividendsOwing(user3).shift(-decimals));
-      console.log("RESULT: token" + j + ".dividendsOwing(user4)=" + contract.dividendsOwing(user4).shift(-decimals));
     }
 
     var latestBlock = eth.blockNumber;
