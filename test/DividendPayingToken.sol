@@ -132,10 +132,10 @@ function disburse(uint amount) {
         return accounts[tokenOwner].balance;
     }
     function transfer(address to, uint tokens) public returns (bool success) {
-        accounts[msg.sender].balance = accounts[msg.sender].balance.sub(tokens);
-        accounts[to].balance = accounts[to].balance.add(tokens);
         updateAccount(msg.sender);
         updateAccount(to);
+        accounts[msg.sender].balance = accounts[msg.sender].balance.sub(tokens);
+        accounts[to].balance = accounts[to].balance.add(tokens);
         emit Transfer(msg.sender, to, tokens);
         return true;
     }
@@ -145,11 +145,11 @@ function disburse(uint amount) {
         return true;
     }
     function transferFrom(address from, address to, uint tokens) public returns (bool success) {
+        updateAccount(from);
+        updateAccount(to);
         accounts[from].balance = accounts[from].balance.sub(tokens);
         allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
         accounts[to].balance = accounts[to].balance.add(tokens);
-        updateAccount(from);
-        updateAccount(to);
         emit Transfer(from, to, tokens);
         return true;
     }
